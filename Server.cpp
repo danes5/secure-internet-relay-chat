@@ -42,13 +42,14 @@ QJsonObject Server::getRegisteredClientsInJson()
     return true;
 }*/
 
-void Server::sendConnectionRequest(QString callerName, QString destName){
+void Server::sendConnectionRequest(QString callerName, QString destName) {
     auto con = findConnection(callerName);
     if (con == nullptr){
         qDebug() << "requested user does not exist";
         return;
 
 
+}
 }
 
 void Server::sendConnectionAccept(QString callerName, QString destName){
@@ -121,7 +122,7 @@ void Server::processRegistrationRequest(QString name)
 {
     qDebug() << "process registration request on server was called name: " << name;
     Connection* con = static_cast<Connection*>(QObject::sender());
-    if (findConnection(con) == nullptr){
+    if (findConnection(con->getName()) == nullptr){
         con->processRegistrationRequest(name, true);
     } else{
         con->processRegistrationRequest(name, false);
