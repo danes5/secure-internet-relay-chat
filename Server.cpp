@@ -42,14 +42,19 @@ QJsonObject Server::getRegisteredClientsInJson()
     return true;
 }*/
 
-void Server::sendConnectionRequest(QString callerName, QString destName) {
-    auto con = findConnection(callerName);
+void Server::sendChannelRequest(QString destName, QJsonObject json) {
+    qDebug() << "sending connection request to: " << destName;
+    auto con = findConnection(destName);
     if (con == nullptr){
         qDebug() << "requested user does not exist";
         return;
+    }
+
+        qDebug() << "before sendChannelRequest";
+    con->sendChannelRequest(json);
 
 
-}
+
 }
 
 void Server::sendConnectionAccept(QString callerName, QString destName){
@@ -99,6 +104,7 @@ void Server::incomingConnection(qintptr socketDescriptor)
     qDebug() << "new Incoming connection" << socketDescriptor;
     Connection* connection = new Connection(socketDescriptor, this);
     connect(connection, SIGNAL(onRegistrationRequest(QString)), this, SLOT(processRegistrationRequest(QString)) );
+    connect(connection, SIGNAL(onCreateChannelRequest(QString, QJsonObject)), this, SLOT(sendChannelRequest(QString, QJsonObject)));
     //bool b = connection->setSocketDescriptor(socketDescriptor);
 
     activeConnections.push_back(connection);

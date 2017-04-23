@@ -86,10 +86,7 @@ QByteArray Connection::encryptGetRegisteredClientsReply()
 
 QByteArray Connection::encryptChannelRequest(QJsonObject data)
 {
-    QJsonObject result;
-    result["type"] = "req_cre";
-    result["name"] = data["name"];
-    return encryptAndTag(result);
+    return encryptAndTag(data);
 }
 
 QByteArray Connection::encryptChannelReply(QJsonObject data)
@@ -146,6 +143,8 @@ QString Connection::getName()
 }
 
 void Connection::sendChannelRequest(QJsonObject data){
+    //qDebug() << "forwarding channel request from server";
+    //qDebug() << "just checking client : " << data["client"];
     QByteArray array = encryptChannelRequest(data);
     socket->write(array);
     if (!socket->waitForBytesWritten())
@@ -199,9 +198,12 @@ void Connection::readyRead()
                qDebug() << "registration request received from client: " << name;
            } else
            if (type == "req_cre"){
-               QString name = parser.get("client");
-               qDebug() << "received communication request to client: " << name;
-               emit onCreateChannelRequest(clientName, name);
+               QJsonObject json = parser.getJson();
+               QString destName = parser.get("client");
+               json["client"] = clientName;
+
+               qDebug() << "received communication request to client: " << destName << "from client: " << clientName;
+               emit onCreateChannelRequest(destName, json);
            } else
            if (type == "req_rep"){
                QString name = parser.get("client");

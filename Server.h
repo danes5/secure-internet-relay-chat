@@ -100,7 +100,7 @@ public slots:
      * @param callerName name of the sender of the request
      * @param destName name of the destination client of the request
      */
-    void sendConnectionRequest(QString callerName, QString destName);
+    void sendChannelRequest(QString destName, QJsonObject json);
 
 };
 

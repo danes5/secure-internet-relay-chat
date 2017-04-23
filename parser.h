@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include "clientinfo.h"
 class Parser
 {
 public:
@@ -11,6 +12,8 @@ public:
     Parser();
     bool verifyId(quint64 id);
     QString get(const QString& key);
+    ClientInfo getClientInfo();
+    QJsonObject getJson();
 private:
     QJsonObject json;
 

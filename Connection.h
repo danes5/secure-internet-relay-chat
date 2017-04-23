@@ -80,7 +80,7 @@ private:
 
     signals:
         void onRegistrationRequest(QString clientName);
-        void onCreateChannelRequest(QString sender, QString receiver);
+        void onCreateChannelRequest(QString destination,  QJsonObject json);
 
     public slots:
         void processRegistrationRequest(QString clientName, bool result);
