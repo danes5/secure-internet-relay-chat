@@ -14,7 +14,7 @@ QList<QString> Server::getRegisteredClients()
     QList<QString> clients;
     for (auto con : activeConnections){
         if (con->isReady())
-            clients.push_back(con->getClientInfo().name);
+            clients.push_back(con->getName());
     }
     return clients;
 }
@@ -26,6 +26,7 @@ QJsonObject Server::getRegisteredClientsInJson()
     QJsonArray names;
 
     for (auto& it : getRegisteredClients()){
+        qDebug() << it;
         names.append(it);
     }
     data["names"] = names;
@@ -42,7 +43,12 @@ QJsonObject Server::getRegisteredClientsInJson()
 }*/
 
 void Server::sendConnectionRequest(QString callerName, QString destName){
-    // not yet implemented
+    auto con = findConnection(callerName);
+    if (con == nullptr){
+        qDebug() << "requested user does not exist";
+        return;
+
+
 }
 
 void Server::sendConnectionAccept(QString callerName, QString destName){
@@ -64,21 +70,21 @@ bool Server::clientExists(QString clientName)
     return cl.contains(clientName);
 }
 
-const ClientInfo&  Server::getClientInfo(QString clientName){
+/*const ClientInfo&  Server::getClientInfo(QString clientName){
     for (auto it : activeConnections){
         if (it->getClientInfo().name == clientName)
             return it->getClientInfo();
     }
 
-}
+}*/
 
-QJsonObject Server::getclientInfoInJSON(QString clientName){
+/*QJsonObject Server::getclientInfoInJSON(QString clientName){
     QJsonObject clientInfoJson;
     ClientInfo cInfo = getClientInfo(clientName);
     cInfo.write(clientInfoJson);
     return clientInfoJson;
 
-}
+}*/
 
 /*void Server::removeClient(QString clientName){
     auto client = registeredClients.find(clientName);
@@ -99,16 +105,25 @@ void Server::incomingConnection(qintptr socketDescriptor)
     //emit connection->connected();
 }
 
+Connection *Server::findConnection(QString name)
+{
+    for (auto it : activeConnections){
+        if (it->isRegistered()){
+            if (it->getName() == name)
+                return &(*it);
+
+        }
+    }
+    return nullptr;
+}
+
 void Server::processRegistrationRequest(QString name)
 {
     qDebug() << "process registration request on server was called name: " << name;
     Connection* con = static_cast<Connection*>(QObject::sender());
-    for (auto it : activeConnections){
-        if (it->isRegistered()){
-            if (it->getClientInfo().name == name)
-                con->processRegistrationRequest(name, false);
-            return;
-        }
+    if (findConnection(con) == nullptr){
+        con->processRegistrationRequest(name, true);
+    } else{
+        con->processRegistrationRequest(name, false);
     }
-    con->processRegistrationRequest(name, true);
 }

@@ -43,13 +43,6 @@ public:
     bool registerNewClient(QString clientName, Connection* connection);
 
     /**
-     * @brief sendConnectionRequest method called by client to initialize connection with another client
-     * @param callerName name of the sender of the request
-     * @param destName name of the destination client of the request
-     */
-    void sendConnectionRequest(QString callerName, QString destName);
-
-    /**
      * @brief sendConnectionAccept called on server by accepting client to send request accept to the sender
      * @param callerName name of the accepting client
      * @param destName name of the original sender of the request
@@ -98,9 +91,16 @@ public:
 
 protected:
     void incomingConnection(qintptr socketDescriptor) override;
+    Connection* findConnection(QString name);
 
 public slots:
     void processRegistrationRequest(QString name);
+    /**
+     * @brief sendConnectionRequest method called by client to initialize connection with another client
+     * @param callerName name of the sender of the request
+     * @param destName name of the destination client of the request
+     */
+    void sendConnectionRequest(QString callerName, QString destName);
 
 };
 

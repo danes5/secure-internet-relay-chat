@@ -47,8 +47,9 @@ private:
     void sendChannelRequest(QJsonObject data);
     void sendChannelReply(QJsonObject data);
     void sendRegisteredClients();
-    void sendRegistrationReply(QString name, bool result);
+    void sendRegistrationReply(QString clientName, bool result);
     bool isRegistered();
+    QString getName();
 private:
     ConnectionStates connectionState;
     bool encrypted;
@@ -60,14 +61,15 @@ private:
     bool registered;
 
     // info about the client
-    ClientInfo clientInfo;
+    //ClientInfo clientInfo;
+    QString clientName;
 
 
     QByteArray encryptGetRegisteredClientsReply();
     QByteArray encryptChannelRequest(QJsonObject data);
     QByteArray encryptChannelReply(QJsonObject data);
     QByteArray encryptSendClientInfo(QJsonObject data);
-    QByteArray encryptRegistrationReply(QString name, bool result);
+    QByteArray encryptRegistrationReply(QString clientName, bool result);
 
     void initialize();
     unsigned char * generateGcmKey();
@@ -77,10 +79,11 @@ private:
 
 
     signals:
-        bool onRegistrationRequest(QString name);
+        void onRegistrationRequest(QString clientName);
+        void onCreateChannelRequest(QString sender, QString receiver);
 
     public slots:
-        void processRegistrationRequest(QString name, bool result);
+        void processRegistrationRequest(QString clientName, bool result);
         virtual void connected();
         virtual void disconnected();
         virtual void readyRead();

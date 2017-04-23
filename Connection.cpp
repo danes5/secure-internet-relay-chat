@@ -6,7 +6,7 @@ void Connection::processGetRequest()
 
 }
 
-Connection::Connection(quintptr descriptor, QObject *parent) : encrypted(true)
+Connection::Connection(quintptr descriptor, QObject *parent) : QObject(parent), encrypted(true), registered(false), server(static_cast<Server*> (parent))
 {
     initialize();
     unsigned char key[32] = { 'o', 'a', 'b', 's', 'w', 'o', 'e', 'd', 'v', 'h', 'q', 'm', 'z', 'g', 'a', 'u','y','q','g','l','5','`','1','Z','q','H','7','F','f','b','n',' '};
@@ -35,6 +35,10 @@ void Connection::setkey(unsigned char * newKey)
 
 void Connection::processRegistrationRequest(QString name, bool result)
 {
+    if (registered || !result)
+        return;
+    registered = result;
+    clientName = name;
     sendRegistrationReply(name, result);
 
 }
@@ -45,15 +49,15 @@ void Connection::processRegistrationRequest(QString name, bool result)
     //qDebug() << isValid();
 }*/
 
-const ClientInfo &Connection::getClientInfo()
+/*const ClientInfo &Connection::getClientInfo()
 {
     return clientInfo;
 
-}
+}*/
 
 bool Connection::isReady()
 {
-    return connectionState == ready;
+   return registered && encrypted;
 
 }
 
@@ -124,7 +128,7 @@ void Connection::sendRegisteredClients()
 
 void Connection::sendRegistrationReply(QString name, bool result)
 {
-    qDebug() << "sending registration reply to name: " << name;
+    qDebug() << "sending registration reply to name: " << name << "with result: " << result;
     QByteArray array = encryptRegistrationReply(name, result);
     socket->write(array);
     if (!socket->waitForBytesWritten())
@@ -134,6 +138,11 @@ void Connection::sendRegistrationReply(QString name, bool result)
 bool Connection::isRegistered()
 {
     return registered;
+}
+
+QString Connection::getName()
+{
+    return clientName;
 }
 
 void Connection::sendChannelRequest(QJsonObject data){
@@ -182,7 +191,7 @@ void Connection::readyRead()
            QString type = parser.get("type");
            if (type == "get_cli"){
                 qDebug() << "get active clients request";
-                //sendRegisteredClients();
+                sendRegisteredClients();
            } else
            if (type == "reg_req"){
                QString name = parser.get("client");
@@ -192,6 +201,7 @@ void Connection::readyRead()
            if (type == "req_cre"){
                QString name = parser.get("client");
                qDebug() << "received communication request to client: " << name;
+               emit onCreateChannelRequest(clientName, name);
            } else
            if (type == "req_rep"){
                QString name = parser.get("client");
