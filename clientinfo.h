@@ -13,11 +13,11 @@
  * class contains essential public information about a client such as their ip address, public key etc.
  * not yet fully implemented
  */
-class ClientInfo
+struct ClientInfo
 {
-private:
     // ip address of the client
     QHostAddress clientAddress;
+    QString name;
 
     // class should contain some additional info about client
 

@@ -4,7 +4,12 @@
 #include <QObject>
 #include <QDebug>
 #include <QTcpSocket>
-
+#include <QSslSocket>
+#include "clientinfo.h"
+#include "gcmutils.h"
+#include "buffer.h"
+#include "parser.h"
+#include "Server.h"
 /**
  * @brief The Connection class
  * represents communication between client and server
@@ -12,34 +17,77 @@
  *
  * not yet implemented
  */
-class Connection : public QObject{
+
+enum ConnectionStates{
+    waiting,
+    receivedPubKey,
+    sentPubKey,
+    receivedSymKey,
+    receivedClientInfo,
+    ready,
+    invalid
+};
+
+class Server;
+class Connection : public QObject {
         Q_OBJECT
 
 private:
     void processGetRequest();
+    QTcpSocket* socket;
 
 
 
 
     public:
-        //explicit Connection(QObject *parent = 0);
-        //~Connection();
+        explicit Connection(quintptr descriptor, QObject *parent = 0);
+    const ClientInfo& getClientInfo();
+    bool isReady();
+        ~Connection();
+    void sendChannelRequest(QJsonObject data);
+    void sendChannelReply(QJsonObject data);
+    void sendRegisteredClients();
+    void sendRegistrationReply(QString name, bool result);
+    bool isRegistered();
+private:
+    ConnectionStates connectionState;
+    bool encrypted;
+    GcmUtils gcm;
+    Buffer buffer;
+    quint64 nextId;
+    Server* server;
+    QByteArray encryptAndTag(QJsonObject json);
+    bool registered;
 
-        virtual void setSocket(QTcpSocket *socket);
+    // info about the client
+    ClientInfo clientInfo;
 
-    protected:
-        QTcpSocket *m_socket;
-        QTcpSocket *getSocket();
+
+    QByteArray encryptGetRegisteredClientsReply();
+    QByteArray encryptChannelRequest(QJsonObject data);
+    QByteArray encryptChannelReply(QJsonObject data);
+    QByteArray encryptSendClientInfo(QJsonObject data);
+    QByteArray encryptRegistrationReply(QString name, bool result);
+
+    void initialize();
+    unsigned char * generateGcmKey();
+    void setkey(unsigned char * newKey);
+
+
+
 
     signals:
+        bool onRegistrationRequest(QString name);
 
     public slots:
+        void processRegistrationRequest(QString name, bool result);
         virtual void connected();
         virtual void disconnected();
         virtual void readyRead();
         virtual void bytesWritten(qint64 bytes);
         virtual void stateChanged(QAbstractSocket::SocketState socketState);
         virtual void error(QAbstractSocket::SocketError socketError);
+
 
 };
 

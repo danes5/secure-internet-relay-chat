@@ -8,7 +8,7 @@
 #include "Connection.h"
 #include <map>
 #include <string>
-#include "Client.hpp"
+#include "Client.h"
 
 #include <QJsonDocument>
 #include <QJsonValue>
@@ -19,7 +19,7 @@
  * @brief The Server class
  * represents server that is responsible for communicating with clients and creating connections between them
  */
-
+class Connection;
 class Server : public QTcpServer
 {
     Q_OBJECT
@@ -30,6 +30,7 @@ public:
      * @return map of all registered clients
      */
     QList<QString> getRegisteredClients();
+    QList<Connection*> activeConnections;
 
     QJsonObject getRegisteredClientsInJson();
 
@@ -95,8 +96,11 @@ public:
      */
     void removeClient(QString clientName);
 
-private:
-    QMap<QString, Client* > registeredClients;
+protected:
+    void incomingConnection(qintptr socketDescriptor) override;
+
+public slots:
+    void processRegistrationRequest(QString name);
 
 };
 
