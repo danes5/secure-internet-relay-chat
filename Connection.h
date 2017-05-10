@@ -84,6 +84,7 @@ private:
         void onRegistrationRequest(ClientInfo clInfo);
         void onCreateChannelReply(QString dest, QJsonObject data);
         void onCreateChannelRequest(QString destination,  QJsonObject json);
+        void onQuit(Connection* connection);
 
     public slots:
         void processRegistrationRequest(ClientInfo clInfo, bool result);

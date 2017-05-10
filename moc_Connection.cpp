@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_Connection_t {
-    QByteArrayData data[24];
-    char stringdata0[310];
+    QByteArrayData data[27];
+    char stringdata0[340];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -42,25 +42,29 @@ QT_MOC_LITERAL(7, 78, 4), // "data"
 QT_MOC_LITERAL(8, 83, 22), // "onCreateChannelRequest"
 QT_MOC_LITERAL(9, 106, 11), // "destination"
 QT_MOC_LITERAL(10, 118, 4), // "json"
-QT_MOC_LITERAL(11, 123, 26), // "processRegistrationRequest"
-QT_MOC_LITERAL(12, 150, 6), // "result"
-QT_MOC_LITERAL(13, 157, 9), // "connected"
-QT_MOC_LITERAL(14, 167, 12), // "disconnected"
-QT_MOC_LITERAL(15, 180, 9), // "readyRead"
-QT_MOC_LITERAL(16, 190, 12), // "bytesWritten"
-QT_MOC_LITERAL(17, 203, 5), // "bytes"
-QT_MOC_LITERAL(18, 209, 12), // "stateChanged"
-QT_MOC_LITERAL(19, 222, 28), // "QAbstractSocket::SocketState"
-QT_MOC_LITERAL(20, 251, 11), // "socketState"
-QT_MOC_LITERAL(21, 263, 5), // "error"
-QT_MOC_LITERAL(22, 269, 28), // "QAbstractSocket::SocketError"
-QT_MOC_LITERAL(23, 298, 11) // "socketError"
+QT_MOC_LITERAL(11, 123, 6), // "onQuit"
+QT_MOC_LITERAL(12, 130, 11), // "Connection*"
+QT_MOC_LITERAL(13, 142, 10), // "connection"
+QT_MOC_LITERAL(14, 153, 26), // "processRegistrationRequest"
+QT_MOC_LITERAL(15, 180, 6), // "result"
+QT_MOC_LITERAL(16, 187, 9), // "connected"
+QT_MOC_LITERAL(17, 197, 12), // "disconnected"
+QT_MOC_LITERAL(18, 210, 9), // "readyRead"
+QT_MOC_LITERAL(19, 220, 12), // "bytesWritten"
+QT_MOC_LITERAL(20, 233, 5), // "bytes"
+QT_MOC_LITERAL(21, 239, 12), // "stateChanged"
+QT_MOC_LITERAL(22, 252, 28), // "QAbstractSocket::SocketState"
+QT_MOC_LITERAL(23, 281, 11), // "socketState"
+QT_MOC_LITERAL(24, 293, 5), // "error"
+QT_MOC_LITERAL(25, 299, 28), // "QAbstractSocket::SocketError"
+QT_MOC_LITERAL(26, 328, 11) // "socketError"
 
     },
     "Connection\0onRegistrationRequest\0\0"
     "ClientInfo\0clInfo\0onCreateChannelReply\0"
     "dest\0data\0onCreateChannelRequest\0"
-    "destination\0json\0processRegistrationRequest\0"
+    "destination\0json\0onQuit\0Connection*\0"
+    "connection\0processRegistrationRequest\0"
     "result\0connected\0disconnected\0readyRead\0"
     "bytesWritten\0bytes\0stateChanged\0"
     "QAbstractSocket::SocketState\0socketState\0"
@@ -75,40 +79,42 @@ static const uint qt_meta_data_Connection[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      10,   14, // methods
+      11,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       3,       // signalCount
+       4,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    1,   64,    2, 0x06 /* Public */,
-       5,    2,   67,    2, 0x06 /* Public */,
-       8,    2,   72,    2, 0x06 /* Public */,
+       1,    1,   69,    2, 0x06 /* Public */,
+       5,    2,   72,    2, 0x06 /* Public */,
+       8,    2,   77,    2, 0x06 /* Public */,
+      11,    1,   82,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-      11,    2,   77,    2, 0x0a /* Public */,
-      13,    0,   82,    2, 0x0a /* Public */,
-      14,    0,   83,    2, 0x0a /* Public */,
-      15,    0,   84,    2, 0x0a /* Public */,
-      16,    1,   85,    2, 0x0a /* Public */,
-      18,    1,   88,    2, 0x0a /* Public */,
-      21,    1,   91,    2, 0x0a /* Public */,
+      14,    2,   85,    2, 0x0a /* Public */,
+      16,    0,   90,    2, 0x0a /* Public */,
+      17,    0,   91,    2, 0x0a /* Public */,
+      18,    0,   92,    2, 0x0a /* Public */,
+      19,    1,   93,    2, 0x0a /* Public */,
+      21,    1,   96,    2, 0x0a /* Public */,
+      24,    1,   99,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void, 0x80000000 | 3,    4,
     QMetaType::Void, QMetaType::QString, QMetaType::QJsonObject,    6,    7,
     QMetaType::Void, QMetaType::QString, QMetaType::QJsonObject,    9,   10,
+    QMetaType::Void, 0x80000000 | 12,   13,
 
  // slots: parameters
-    QMetaType::Void, 0x80000000 | 3, QMetaType::Bool,    4,   12,
+    QMetaType::Void, 0x80000000 | 3, QMetaType::Bool,    4,   15,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::LongLong,   17,
-    QMetaType::Void, 0x80000000 | 19,   20,
+    QMetaType::Void, QMetaType::LongLong,   20,
     QMetaType::Void, 0x80000000 | 22,   23,
+    QMetaType::Void, 0x80000000 | 25,   26,
 
        0        // eod
 };
@@ -122,26 +128,34 @@ void Connection::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 0: _t->onRegistrationRequest((*reinterpret_cast< ClientInfo(*)>(_a[1]))); break;
         case 1: _t->onCreateChannelReply((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< QJsonObject(*)>(_a[2]))); break;
         case 2: _t->onCreateChannelRequest((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< QJsonObject(*)>(_a[2]))); break;
-        case 3: _t->processRegistrationRequest((*reinterpret_cast< ClientInfo(*)>(_a[1])),(*reinterpret_cast< bool(*)>(_a[2]))); break;
-        case 4: _t->connected(); break;
-        case 5: _t->disconnected(); break;
-        case 6: _t->readyRead(); break;
-        case 7: _t->bytesWritten((*reinterpret_cast< qint64(*)>(_a[1]))); break;
-        case 8: _t->stateChanged((*reinterpret_cast< QAbstractSocket::SocketState(*)>(_a[1]))); break;
-        case 9: _t->error((*reinterpret_cast< QAbstractSocket::SocketError(*)>(_a[1]))); break;
+        case 3: _t->onQuit((*reinterpret_cast< Connection*(*)>(_a[1]))); break;
+        case 4: _t->processRegistrationRequest((*reinterpret_cast< ClientInfo(*)>(_a[1])),(*reinterpret_cast< bool(*)>(_a[2]))); break;
+        case 5: _t->connected(); break;
+        case 6: _t->disconnected(); break;
+        case 7: _t->readyRead(); break;
+        case 8: _t->bytesWritten((*reinterpret_cast< qint64(*)>(_a[1]))); break;
+        case 9: _t->stateChanged((*reinterpret_cast< QAbstractSocket::SocketState(*)>(_a[1]))); break;
+        case 10: _t->error((*reinterpret_cast< QAbstractSocket::SocketError(*)>(_a[1]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
         switch (_id) {
         default: *reinterpret_cast<int*>(_a[0]) = -1; break;
-        case 8:
+        case 3:
+            switch (*reinterpret_cast<int*>(_a[1])) {
+            default: *reinterpret_cast<int*>(_a[0]) = -1; break;
+            case 0:
+                *reinterpret_cast<int*>(_a[0]) = qRegisterMetaType< Connection* >(); break;
+            }
+            break;
+        case 9:
             switch (*reinterpret_cast<int*>(_a[1])) {
             default: *reinterpret_cast<int*>(_a[0]) = -1; break;
             case 0:
                 *reinterpret_cast<int*>(_a[0]) = qRegisterMetaType< QAbstractSocket::SocketState >(); break;
             }
             break;
-        case 9:
+        case 10:
             switch (*reinterpret_cast<int*>(_a[1])) {
             default: *reinterpret_cast<int*>(_a[0]) = -1; break;
             case 0:
@@ -173,6 +187,13 @@ void Connection::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
                 return;
             }
         }
+        {
+            typedef void (Connection::*_t)(Connection * );
+            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&Connection::onQuit)) {
+                *result = 3;
+                return;
+            }
+        }
     }
 }
 
@@ -201,13 +222,13 @@ int Connection::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 10)
+        if (_id < 11)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 10;
+        _id -= 11;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 10)
+        if (_id < 11)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 10;
+        _id -= 11;
     }
     return _id;
 }
@@ -231,6 +252,13 @@ void Connection::onCreateChannelRequest(QString _t1, QJsonObject _t2)
 {
     void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
     QMetaObject::activate(this, &staticMetaObject, 2, _a);
+}
+
+// SIGNAL 3
+void Connection::onQuit(Connection * _t1)
+{
+    void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    QMetaObject::activate(this, &staticMetaObject, 3, _a);
 }
 QT_WARNING_POP
 QT_END_MOC_NAMESPACE

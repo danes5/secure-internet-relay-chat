@@ -173,7 +173,7 @@ void Connection::readyRead()
    buffer.append(socket->readAll());
    if (buffer.fullMessageRead()){
        QByteArray data = buffer.getData();
-       qDebug() << data;
+       buffer.reset();
         Parser parser;
        if (encrypted) {
            parser = Parser(gcm.decryptAndAuthorizeFull(data));
@@ -221,7 +221,12 @@ void Connection::readyRead()
 
 
                qDebug() << "received communication reply to client: " << name << " with result: " << res;
+           } else
+           if (type == "quit"){
+               emit onQuit(this);
            }
+
+
 
 
 
@@ -242,12 +247,6 @@ void Connection::readyRead()
                encrypted = true;
            }
        }
-
-
-
-
-
-    buffer.reset();
    }
 
 

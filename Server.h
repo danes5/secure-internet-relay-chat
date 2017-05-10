@@ -90,11 +90,6 @@ public:
      */
     QJsonObject getclientInfoInJSON(QString clientName);
 
-    /**
-     * @brief removeClient remove client from server, also remove all ongoing communications
-     * @param clientName name of the client to remove
-     */
-    void removeClient(QString clientName);
 
 protected:
     void incomingConnection(qintptr socketDescriptor) override;
@@ -109,6 +104,13 @@ public slots:
      */
     void sendChannelRequest(QString destName, QJsonObject json);
     void sendChannelReply(QString destName, QJsonObject json);
+
+    /**
+     * @brief removeClient remove client from server
+     * @param clientName name of the client to remove
+     */
+    void removeClient(Connection* connection);
+
 
 };
 

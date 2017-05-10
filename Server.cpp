@@ -95,6 +95,13 @@ bool Server::clientExists(QString clientName)
     return cl.contains(clientName);
 }
 
+void Server::removeClient(Connection *connection)
+{
+    qDebug() << "remove client";
+    activeConnections.removeAll(connection);
+    delete(connection);
+}
+
 /*const ClientInfo&  Server::getClientInfo(QString clientName){
     for (auto it : activeConnections){
         if (it->getClientInfo().name == clientName)
@@ -125,6 +132,7 @@ void Server::incomingConnection(qintptr socketDescriptor)
     connect(connection, SIGNAL(onRegistrationRequest(ClientInfo)), this, SLOT(processRegistrationRequest(ClientInfo)) );
     connect(connection, SIGNAL(onCreateChannelRequest(QString, QJsonObject)), this, SLOT(sendChannelRequest(QString, QJsonObject)));
     connect(connection, SIGNAL(onCreateChannelReply(QString, QJsonObject)), this, SLOT(sendChannelReply(QString, QJsonObject)));
+    connect(connection, SIGNAL(onQuit(Connection*)), this, SLOT(removeClient(Connection*)));
     //bool b = connection->setSocketDescriptor(socketDescriptor);
 
     activeConnections.push_back(connection);
