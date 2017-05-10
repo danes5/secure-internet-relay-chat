@@ -12,8 +12,12 @@ Connection::Connection(quintptr descriptor, rsautils &rsa, QObject *parent) : QO
     initialize();
 
     socket = new QSslSocket();
-    socket->setSocketDescriptor(descriptor);
+
+    if (! socket->setSocketDescriptor(descriptor)){
+        qDebug() << "could not set descriptor";
+    }
     socket->setProtocol(QSsl::TlsV1SslV3);
+
 
     QFile file_key("server.key");
     if (!file_key.open(QIODevice::ReadOnly)) {
@@ -23,7 +27,7 @@ Connection::Connection(quintptr descriptor, rsautils &rsa, QObject *parent) : QO
     file_key.close();
 
     QFile file_cert("server.csr");
-    if (file_cert.open(QIODevice::ReadOnly)) {
+    if (! file_cert.open(QIODevice::ReadOnly)) {
         qDebug() << file_cert.errorString();
         return;
     }
@@ -34,9 +38,19 @@ Connection::Connection(quintptr descriptor, rsautils &rsa, QObject *parent) : QO
     socket->startServerEncryption();
 
     connect(socket, SIGNAL(sslErrors(QList<QSslError>)), this, SLOT(sslError(QList<QSslError>)));
-    connect(socket, SIGNAL(encrypted()), this, SLOT(readyRead()));
+    connect(socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
+    connect(socket, SIGNAL(error(QAbstractSocket::SocketError)),
+                    this, SLOT(socketError(QAbstractSocket::SocketError)));
+    connect(socket, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(stateChanged(QAbstractSocket::SocketState)));
+
+
     qDebug() << "connection initialized";
 
+}
+
+void Connection::socketError(QAbstractSocket::SocketError error)
+{
+    qDebug() << "socket error:  " << error;
 }
 
 void Connection::initialize(){
@@ -282,13 +296,10 @@ void Connection::bytesWritten(qint64 bytes)
 
 void Connection::stateChanged(QAbstractSocket::SocketState socketState)
 {
+    qDebug() << "state changed: " << socketState;
 
 }
 
-void Connection::error(QAbstractSocket::SocketError socketError)
-{
-
-}
 
 void Connection::sslError(QList<QSslError> errors) {
     qDebug() << "SLL error:\t" << errors;

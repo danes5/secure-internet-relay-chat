@@ -73,7 +73,7 @@ private:
     QByteArray encryptChannelReply(QJsonObject data);
     QByteArray encryptSendClientInfo(QJsonObject data);
     QByteArray encryptRegistrationReply(QString clientName, bool result);
-    void sslError(QList<QSslError> errors);
+
 
     void initialize();
     unsigned char * generateGcmKey();
@@ -90,12 +90,14 @@ private:
 
     public slots:
         void processRegistrationRequest(ClientInfo clInfo, bool result);
-        virtual void connected();
-        virtual void disconnected();
-        virtual void readyRead();
-        virtual void bytesWritten(qint64 bytes);
-        virtual void stateChanged(QAbstractSocket::SocketState socketState);
-        virtual void error(QAbstractSocket::SocketError socketError);
+        void connected();
+        void disconnected();
+        void readyRead();
+        void bytesWritten(qint64 bytes);
+        void stateChanged(QAbstractSocket::SocketState socketState);
+        //void error(QAbstractSocket::SocketError socketError);
+        void sslError(QList<QSslError> errors);
+        void socketError(QAbstractSocket::SocketError error);
 
 
 };
