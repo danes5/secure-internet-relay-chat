@@ -10,9 +10,31 @@ Connection::Connection(quintptr descriptor, rsautils &rsa, QObject *parent) : QO
     server(static_cast<Server*> (parent)), rsa(rsa)
 {
     initialize();
-    socket = new QTcpSocket();
+
+    socket = new QSslSocket();
     socket->setSocketDescriptor(descriptor);
-    connect(socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
+    socket->setProtocol(QSsl::TlsV1SslV3);
+
+    QFile file_key("server.key");
+    if (!file_key.open(QIODevice::ReadOnly)) {
+        qDebug() << file_key.errorString();
+        return;
+    }
+    file_key.close();
+
+    QFile file_cert("server.csr");
+    if (file_cert.open(QIODevice::ReadOnly)) {
+        qDebug() << file_cert.errorString();
+        return;
+    }
+    file_cert.close();
+
+    socket->setPrivateKey("server.key");
+    socket->setLocalCertificate("server.csr");
+    socket->startServerEncryption();
+
+    connect(socket, SIGNAL(sslErrors(QList<QSslError>)), this, SLOT(sslError(QList<QSslError>)));
+    connect(socket, SIGNAL(encrypted()), this, SLOT(readyRead()));
     qDebug() << "connection initialized";
 
 }
@@ -268,3 +290,6 @@ void Connection::error(QAbstractSocket::SocketError socketError)
 
 }
 
+void Connection::sslError(QList<QSslError> errors) {
+    qDebug() << "SLL error:\t" << errors;
+}

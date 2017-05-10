@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QTcpSocket>
 #include <QSslSocket>
+#include <QFile>
 #include "clientinfo.h"
 #include "gcmutils.h"
 #include "buffer.h"
@@ -35,7 +36,7 @@ class Connection : public QObject {
 
 private:
     void processGetRequest();
-    QTcpSocket* socket;
+    QSslSocket* socket;
     rsautils& rsa;
 
 
@@ -72,6 +73,7 @@ private:
     QByteArray encryptChannelReply(QJsonObject data);
     QByteArray encryptSendClientInfo(QJsonObject data);
     QByteArray encryptRegistrationReply(QString clientName, bool result);
+    void sslError(QList<QSslError> errors);
 
     void initialize();
     unsigned char * generateGcmKey();
