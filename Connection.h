@@ -16,31 +16,17 @@
  * @brief The Connection class
  * represents communication between client and server
  * contains socket through which server will receive requests from client and send replies
- *
- * not yet implemented
  */
 
-enum ConnectionStates{
-    waiting,
-    receivedPubKey,
-    sentPubKey,
-    receivedSymKey,
-    receivedClientInfo,
-    ready,
-    invalid
-};
+
 
 class Server;
 class Connection : public QObject {
         Q_OBJECT
 
 private:
-    void processGetRequest();
     QSslSocket* socket;
     rsautils& rsa;
-
-
-
 
     public:
         explicit Connection(quintptr descriptor, rsautils& rsa, QObject *parent = 0);
@@ -54,7 +40,6 @@ private:
     bool isRegistered();
     QString getName();
 private:
-    ConnectionStates connectionState;
     bool encrypted;
     GcmUtils gcm;
     Buffer buffer;
@@ -65,8 +50,6 @@ private:
 
     // info about the client
     ClientInfo clientInfo;
-    //QString clientName;
-
 
     QByteArray encryptGetRegisteredClientsReply();
     QByteArray encryptChannelRequest(QJsonObject data);
@@ -95,7 +78,6 @@ private:
         void readyRead();
         void bytesWritten(qint64 bytes);
         void stateChanged(QAbstractSocket::SocketState socketState);
-        //void error(QAbstractSocket::SocketError socketError);
         void sslError(QList<QSslError> errors);
         void socketError(QAbstractSocket::SocketError error);
 

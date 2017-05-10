@@ -1,11 +1,6 @@
 #include "Connection.h"
 #include "parser.h"
 
-void Connection::processGetRequest()
-{
-
-}
-
 Connection::Connection(quintptr descriptor, rsautils &rsa, QObject *parent) : QObject(parent), encrypted(false), registered(false),
     server(static_cast<Server*> (parent)), rsa(rsa)
 {
@@ -57,11 +52,6 @@ void Connection::initialize(){
     gcm.initialize();
 }
 
-/*unsigned char* Connection::generateGcmKey()
-{
-    return gcm.generateGcmKey();
-}*/
-
 void Connection::setkey(unsigned char * newKey)
 {
     gcm.setKey(newKey);
@@ -75,18 +65,6 @@ void Connection::processRegistrationRequest(ClientInfo clInfo, bool result)
     clientInfo = clInfo;
     sendRegistrationReply(clInfo.name, result);
 }
-
-/*Connection::Connection(QObject *parent)
-{
-    //qDebug() << "created connection on:" << socketDescriptor();
-    //qDebug() << isValid();
-}*/
-
-/*const ClientInfo &Connection::getClientInfo()
-{
-    return clientInfo;
-
-}*/
 
 bool Connection::isReady()
 {
@@ -172,8 +150,6 @@ QString Connection::getName()
 }
 
 void Connection::sendChannelRequest(QJsonObject data){
-    //qDebug() << "forwarding channel request from server";
-    //qDebug() << "just checking client : " << data["client"];
     QByteArray array = encryptChannelRequest(data);
     socket->write(array);
     if (!socket->waitForBytesWritten())
@@ -193,14 +169,10 @@ void Connection::sendChannelReply(QJsonObject data){
 
 void Connection::connected()
 {
-    //write("ahoj", 4);
-
-
 }
 
 void Connection::disconnected()
 {
-
 }
 
 void Connection::readyRead()
@@ -260,9 +232,8 @@ void Connection::readyRead()
            } else
            if (type == "quit"){
                emit onQuit(this);
+               deleteLater();
            }
-
-
 
 
 

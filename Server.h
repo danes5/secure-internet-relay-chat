@@ -54,21 +54,7 @@ public:
      * @param callerName name of the accepting client
      * @param destName name of the original sender of the request
      */
-    void sendConnectionAccept(QString callerName, QString destName);
 
-    /**
-     * @brief sendConnectionDecline called on server by declining client to send request decline to the request sender
-     * @param callerName name of the declining client
-     * @param destName name of the original sender of the request
-     */
-    void sendConnectionDecline(QString callerName, QString destName);
-
-    /**
-     * @brief sendClientInfo send client info over network about client to another client, only after connectiom between them was accepted
-     * @param clientName name of the client to send info about
-     * @param destName name of the client to send info to
-     */
-    void sendClientInfo(QString clientName, QString destName);
 
     /**
      * @brief clientExists checks for existence of a client by name

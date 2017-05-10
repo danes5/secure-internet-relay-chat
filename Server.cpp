@@ -42,14 +42,6 @@ QJsonObject Server::getRegisteredClientsInJson()
 
 }
 
-/*bool Server::registerNewClient(QString clientName, Connection* connection){
-    if (getRegisteredClients.find(clientName) != registeredClients.end())
-        return false;
-    Client *client = new Client;
-    registeredClients.insert(clientName, client);
-    return true;
-}*/
-
 void Server::sendChannelRequest(QString destName, QJsonObject json) {
     qDebug() << "sending connection request to: " << destName;
     auto con = findConnection(destName);
@@ -57,8 +49,6 @@ void Server::sendChannelRequest(QString destName, QJsonObject json) {
         qDebug() << "requested user does not exist";
         return;
     }
-
-        qDebug() << "before sendChannelRequest";
     con->sendChannelRequest(json);
 
 
@@ -76,18 +66,6 @@ void Server::sendChannelReply(QString destName, QJsonObject json)
     con->sendChannelReply(json);
 }
 
-void Server::sendConnectionAccept(QString callerName, QString destName){
-    // not yet implemented
-}
-
-void Server::sendConnectionDecline(QString callerName, QString destName){
-    // not yet implemented
-}
-
-void Server::sendClientInfo(QString clientName, QString destName){
-    // not yet implemented
-}
-
 bool Server::clientExists(QString clientName)
 {
     auto cl = getRegisteredClients();
@@ -99,31 +77,8 @@ void Server::removeClient(Connection *connection)
 {
     qDebug() << "remove client";
     activeConnections.removeAll(connection);
-    delete(connection);
 }
 
-/*const ClientInfo&  Server::getClientInfo(QString clientName){
-    for (auto it : activeConnections){
-        if (it->getClientInfo().name == clientName)
-            return it->getClientInfo();
-    }
-
-}*/
-
-/*QJsonObject Server::getclientInfoInJSON(QString clientName){
-    QJsonObject clientInfoJson;
-    ClientInfo cInfo = getClientInfo(clientName);
-    cInfo.write(clientInfoJson);
-    return clientInfoJson;
-
-}*/
-
-/*void Server::removeClient(QString clientName){
-    auto client = registeredClients.find(clientName);
-    client.value()->deleteLater();
-
-    registeredClients.remove(clientName);
-}*/
 
 void Server::incomingConnection(qintptr socketDescriptor)
 {
@@ -133,18 +88,13 @@ void Server::incomingConnection(qintptr socketDescriptor)
     connect(connection, SIGNAL(onCreateChannelRequest(QString, QJsonObject)), this, SLOT(sendChannelRequest(QString, QJsonObject)));
     connect(connection, SIGNAL(onCreateChannelReply(QString, QJsonObject)), this, SLOT(sendChannelReply(QString, QJsonObject)));
     connect(connection, SIGNAL(onQuit(Connection*)), this, SLOT(removeClient(Connection*)));
-    //bool b = connection->setSocketDescriptor(socketDescriptor);
-
     activeConnections.push_back(connection);
-    //qDebug() << "connection has descriptor: " << connection->socketDescriptor();
-    //emit connection->connected();
+
 }
 
 Connection *Server::findConnection(QString name)
 {
     for (auto it : activeConnections){
-        qDebug() << "registered client name: " << it->getName();
-        qDebug() << "new guys name: " << name;
         if (it->isRegistered()){
             if (it->getName() == name)
                 return &(*it);
