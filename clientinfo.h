@@ -17,11 +17,12 @@ struct ClientInfo
 {
     // ip address of the client
     QString clientAddress;
+    QJsonDocument publicKey;
     QString name;
+    //QString clientName;
 
     // class should contain some additional info about client
 
-public:
     ClientInfo();
     /**
      * @brief write write ClientInfo data in JSON format
@@ -33,6 +34,8 @@ public:
      * @param json
      */
     void read(const QJsonObject &json);
+
+    bool operator ==(const ClientInfo& other);
 };
 
 #endif // CLIENTINFO_H

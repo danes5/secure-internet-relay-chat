@@ -10,6 +10,7 @@
 #include "buffer.h"
 #include "parser.h"
 #include "Server.h"
+#include "rsautils.h"
 /**
  * @brief The Connection class
  * represents communication between client and server
@@ -35,12 +36,13 @@ class Connection : public QObject {
 private:
     void processGetRequest();
     QTcpSocket* socket;
+    rsautils& rsa;
 
 
 
 
     public:
-        explicit Connection(quintptr descriptor, QObject *parent = 0);
+        explicit Connection(quintptr descriptor, rsautils& rsa, QObject *parent = 0);
     const ClientInfo& getClientInfo();
     bool isReady();
         ~Connection();
@@ -61,8 +63,8 @@ private:
     bool registered;
 
     // info about the client
-    //ClientInfo clientInfo;
-    QString clientName;
+    ClientInfo clientInfo;
+    //QString clientName;
 
 
     QByteArray encryptGetRegisteredClientsReply();
@@ -79,11 +81,12 @@ private:
 
 
     signals:
-        void onRegistrationRequest(QString clientName);
+        void onRegistrationRequest(ClientInfo clInfo);
+        void onCreateChannelReply(QString dest, QJsonObject data);
         void onCreateChannelRequest(QString destination,  QJsonObject json);
 
     public slots:
-        void processRegistrationRequest(QString clientName, bool result);
+        void processRegistrationRequest(ClientInfo clInfo, bool result);
         virtual void connected();
         virtual void disconnected();
         virtual void readyRead();

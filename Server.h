@@ -8,12 +8,12 @@
 #include "Connection.h"
 #include <map>
 #include <string>
-#include "Client.h"
 
 #include <QJsonDocument>
 #include <QJsonValue>
 #include <QJsonArray>
 #include <QJsonObject>
+#include "rsautils.h"
 
 /**
  * @brief The Server class
@@ -23,14 +23,21 @@ class Connection;
 class Server : public QTcpServer
 {
     Q_OBJECT
+
+private:
+    QList<Connection*> activeConnections;
+    rsautils rsa;
 public:
     Server(QObject *parent = nullptr);
+
+    const QString serverKeysPath = "rsa_priv.txt";
+
     /**
      * @brief getRegisteredClients
      * @return map of all registered clients
      */
     QList<QString> getRegisteredClients();
-    QList<Connection*> activeConnections;
+
 
     QJsonObject getRegisteredClientsInJson();
 
@@ -94,13 +101,14 @@ protected:
     Connection* findConnection(QString name);
 
 public slots:
-    void processRegistrationRequest(QString name);
+    void processRegistrationRequest(ClientInfo clInfo);
     /**
      * @brief sendConnectionRequest method called by client to initialize connection with another client
      * @param callerName name of the sender of the request
      * @param destName name of the destination client of the request
      */
     void sendChannelRequest(QString destName, QJsonObject json);
+    void sendChannelReply(QString destName, QJsonObject json);
 
 };
 

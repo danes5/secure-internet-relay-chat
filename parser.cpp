@@ -33,9 +33,19 @@ ClientInfo Parser::getClientInfo()
 
 }
 
+QJsonArray Parser::getRegisteredClients()
+{
+    QJsonObject jsonClients = json["data"].toObject();
+    QJsonArray names = jsonClients["names"].toArray();
+    return names;
+}
+
 QJsonObject Parser::getJson()
 {
     return json;
 }
 
-
+int Parser::getId()
+{
+    return json["id"].toInt();
+}

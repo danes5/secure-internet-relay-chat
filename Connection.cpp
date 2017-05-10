@@ -6,11 +6,10 @@ void Connection::processGetRequest()
 
 }
 
-Connection::Connection(quintptr descriptor, QObject *parent) : QObject(parent), encrypted(true), registered(false), server(static_cast<Server*> (parent))
+Connection::Connection(quintptr descriptor, rsautils &rsa, QObject *parent) : QObject(parent), encrypted(false), registered(false),
+    server(static_cast<Server*> (parent)), rsa(rsa)
 {
     initialize();
-    unsigned char key[32] = { 'o', 'a', 'b', 's', 'w', 'o', 'e', 'd', 'v', 'h', 'q', 'm', 'z', 'g', 'a', 'u','y','q','g','l','5','`','1','Z','q','H','7','F','f','b','n',' '};
-    setkey(key);
     socket = new QTcpSocket();
     socket->setSocketDescriptor(descriptor);
     connect(socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
@@ -22,10 +21,10 @@ void Connection::initialize(){
     gcm.initialize();
 }
 
-unsigned char* Connection::generateGcmKey()
+/*unsigned char* Connection::generateGcmKey()
 {
     return gcm.generateGcmKey();
-}
+}*/
 
 void Connection::setkey(unsigned char * newKey)
 {
@@ -33,14 +32,12 @@ void Connection::setkey(unsigned char * newKey)
 
 }
 
-void Connection::processRegistrationRequest(QString name, bool result)
+void Connection::processRegistrationRequest(ClientInfo clInfo, bool result)
 {
-    if (registered || !result)
-        return;
+    qDebug() << "registration request:  " << clInfo.name;
     registered = result;
-    clientName = name;
-    sendRegistrationReply(name, result);
-
+    clientInfo = clInfo;
+    sendRegistrationReply(clInfo.name, result);
 }
 
 /*Connection::Connection(QObject *parent)
@@ -91,11 +88,7 @@ QByteArray Connection::encryptChannelRequest(QJsonObject data)
 
 QByteArray Connection::encryptChannelReply(QJsonObject data)
 {
-    QJsonObject result;
-    result["type"] = "req_rep";
-    result["name"] = data["name"];
-    result["result"] = data["result"];
-    return encryptAndTag(result);
+    return encryptAndTag(data);
 }
 
 QByteArray Connection::encryptSendClientInfo(QJsonObject data)
@@ -139,7 +132,7 @@ bool Connection::isRegistered()
 
 QString Connection::getName()
 {
-    return clientName;
+    return clientInfo.name;
 }
 
 void Connection::sendChannelRequest(QJsonObject data){
@@ -180,8 +173,9 @@ void Connection::readyRead()
    buffer.append(socket->readAll());
    if (buffer.fullMessageRead()){
        QByteArray data = buffer.getData();
+       qDebug() << data;
         Parser parser;
-       if (encrypted){
+       if (encrypted) {
            parser = Parser(gcm.decryptAndAuthorizeFull(data));
            if (! parser.verifyId(nextId)){
                // ids do not match so just discard this message
@@ -193,42 +187,69 @@ void Connection::readyRead()
                 sendRegisteredClients();
            } else
            if (type == "reg_req"){
-               QString name = parser.get("client");
-               emit onRegistrationRequest(name);
-               qDebug() << "registration request received from client: " << name;
+               ClientInfo clInfo = parser.getClientInfo();
+               emit onRegistrationRequest(clInfo);
+               //qDebug() << "registration request received from client: " << name;
            } else
            if (type == "req_cre"){
                QJsonObject json = parser.getJson();
                QString destName = parser.get("client");
-               json["client"] = clientName;
 
-               qDebug() << "received communication request to client: " << destName << "from client: " << clientName;
+               QJsonObject clInfoObject;
+               //clientInfo.name = clientName;
+               clientInfo.write(clInfoObject);
+               json.insert("info", clInfoObject);
+               qDebug() << "received communication request to client: " << destName << " from client: " << clientInfo.name;
                emit onCreateChannelRequest(destName, json);
+
            } else
            if (type == "req_rep"){
+               QJsonObject jsonObject;
+
+               int id = parser.getId();
                QString name = parser.get("client");
                QString res = parser.get("result");
+               jsonObject.insert("result", res);
+               if (res == "acc"){
+                   QJsonObject clientInf;
+                   clientInfo.write(clientInf);
+                   jsonObject.insert("info", clientInf);
+                   jsonObject.insert("id", id);
+               }
+               jsonObject.insert("type", "req_rep");
+               emit onCreateChannelReply(name, jsonObject);
+
+
                qDebug() << "received communication reply to client: " << name << " with result: " << res;
            }
 
 
 
        } else{
-           qDebug() << "read data: " << data;
-           QJsonDocument doc;
-           parser = Parser(QJsonDocument::fromBinaryData(data));
+           qDebug() << "RSA read";
+           parser = Parser(QJsonDocument::fromBinaryData( rsa.decryptMessage(data)));
+           if (! parser.verifyId(nextId)){
+               // ids do not match so just discard this message
+               return;
+           }
+           QString type = parser.get("type");
+           if (type == "set_key"){
+               qDebug() << "set key !!!!!!!!!!!!!!!!!!!!!!!!!!";
+               QString key = parser.get("key");
+
+               setkey((unsigned char *)key.toLatin1().data());
+               qDebug() << "key is: " << gcm.getKey();
+               encrypted = true;
+           }
        }
-       if (! parser.verifyId(nextId)){
-           // ids do not match so just discard this message
-           return;
-       }
 
 
 
 
 
+    buffer.reset();
    }
-   buffer.reset();
+
 
 
 }
