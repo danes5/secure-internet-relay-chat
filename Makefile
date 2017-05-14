@@ -59,6 +59,8 @@ SOURCES       = main.cpp \
 		libs/gcm.c \
 		libs/sha512.c \
 		libs/cipher.c \
+		libs/padlock.c \
+		libs/platform.c \
 		libs/ccm.c \
 		libs/cmac.c \
 		libs/cipher_wrap.c \
@@ -99,6 +101,8 @@ OBJECTS       = main.o \
 		gcm.o \
 		sha512.o \
 		cipher.o \
+		padlock.o \
+		platform.o \
 		ccm.o \
 		cmac.o \
 		cipher_wrap.o \
@@ -279,6 +283,7 @@ DIST          = ../../Qt/5.8/gcc_64/mkspecs/features/spec_pre.prf \
 		../../Qt/5.8/gcc_64/mkspecs/features/qt_config.prf \
 		../../Qt/5.8/gcc_64/mkspecs/linux-g++/qmake.conf \
 		../../Qt/5.8/gcc_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		../../Qt/5.8/gcc_64/mkspecs/features/exclusive_builds.prf \
 		../../Qt/5.8/gcc_64/mkspecs/features/toolchain.prf \
 		../../Qt/5.8/gcc_64/mkspecs/features/default_pre.prf \
@@ -352,6 +357,8 @@ DIST          = ../../Qt/5.8/gcc_64/mkspecs/features/spec_pre.prf \
 		libs/gcm.c \
 		libs/sha512.c \
 		libs/cipher.c \
+		libs/padlock.c \
+		libs/platform.c \
 		libs/ccm.c \
 		libs/cmac.c \
 		libs/cipher_wrap.c \
@@ -541,6 +548,7 @@ Makefile: SecureInternetRelayChat_Server.pro ../../Qt/5.8/gcc_64/mkspecs/linux-g
 		../../Qt/5.8/gcc_64/mkspecs/features/qt_config.prf \
 		../../Qt/5.8/gcc_64/mkspecs/linux-g++/qmake.conf \
 		../../Qt/5.8/gcc_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		../../Qt/5.8/gcc_64/mkspecs/features/exclusive_builds.prf \
 		../../Qt/5.8/gcc_64/mkspecs/features/toolchain.prf \
 		../../Qt/5.8/gcc_64/mkspecs/features/default_pre.prf \
@@ -712,6 +720,7 @@ Makefile: SecureInternetRelayChat_Server.pro ../../Qt/5.8/gcc_64/mkspecs/linux-g
 ../../Qt/5.8/gcc_64/mkspecs/features/qt_config.prf:
 ../../Qt/5.8/gcc_64/mkspecs/linux-g++/qmake.conf:
 ../../Qt/5.8/gcc_64/mkspecs/features/spec_post.prf:
+.qmake.stash:
 ../../Qt/5.8/gcc_64/mkspecs/features/exclusive_builds.prf:
 ../../Qt/5.8/gcc_64/mkspecs/features/toolchain.prf:
 ../../Qt/5.8/gcc_64/mkspecs/features/default_pre.prf:
@@ -748,7 +757,7 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../../Qt/5.8/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents Connection.h clientinfo.h catch.hpp gcmutils.h securityfunctions.h libs/cipher_internal.h libs/aes.h libs/aesni.h libs/gcm.h libs/sha512.h libs/check_config.h libs/cipher.h libs/config.h libs/padlock.h libs/platform.h libs/platform_time.h libs/target_config.h catch.hpp libs/ccm.h libs/cmac.h libs/arc4.h libs/camellia.h libs/blowfish.h libs/des.h libs/threading.h libs/entropy_poll.h libs/ctr_drbg.h libs/timing.h libs/havege.h libs/entropy.h libs/bignum.h libs/ripemd160.h libs/sha1.h libs/sha256.h libs/md2.h libs/md4.h libs/md5.h libs/md_internal.h libs/asn1.h libs/md.h libs/oid.h libs/rsa.h rsautils.h buffer.h parser.h Server.h $(DISTDIR)/
-	$(COPY_FILE) --parents main.cpp Server.cpp Connection.cpp clientinfo.cpp gcmutils.cpp securityfunctions.cpp libs/aes.c libs/aesni.c libs/gcm.c libs/sha512.c libs/cipher.c libs/ccm.c libs/cmac.c libs/cipher_wrap.c libs/arc4.c libs/camellia.c libs/blowfish.c libs/des.c libs/threading.c libs/entropy_poll.c libs/ctr_drbg.c libs/timing.c libs/havege.c libs/entropy.c libs/bignum.c libs/ripemd160.c libs/sha1.c libs/sha256.c libs/md2.c libs/md4.c libs/md5.c libs/md_wrap.c libs/asn1parse.c libs/md.c libs/oid.c libs/rsa.c rsautils.cpp buffer.cpp parser.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents main.cpp Server.cpp Connection.cpp clientinfo.cpp gcmutils.cpp securityfunctions.cpp libs/aes.c libs/aesni.c libs/gcm.c libs/sha512.c libs/cipher.c libs/padlock.c libs/platform.c libs/ccm.c libs/cmac.c libs/cipher_wrap.c libs/arc4.c libs/camellia.c libs/blowfish.c libs/des.c libs/threading.c libs/entropy_poll.c libs/ctr_drbg.c libs/timing.c libs/havege.c libs/entropy.c libs/bignum.c libs/ripemd160.c libs/sha1.c libs/sha256.c libs/md2.c libs/md4.c libs/md5.c libs/md_wrap.c libs/asn1parse.c libs/md.c libs/oid.c libs/rsa.c rsautils.cpp buffer.cpp parser.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -859,6 +868,9 @@ moc_Connection.cpp: ../../Qt/5.8/gcc_64/include/QtCore/QObject \
 		../../Qt/5.8/gcc_64/include/QtCore/qdatetime.h \
 		../../Qt/5.8/gcc_64/include/QtNetwork/qssl.h \
 		../../Qt/5.8/gcc_64/include/QtCore/QFlags \
+		../../Qt/5.8/gcc_64/include/QtCore/QFile \
+		../../Qt/5.8/gcc_64/include/QtCore/qfile.h \
+		../../Qt/5.8/gcc_64/include/QtCore/qfiledevice.h \
 		clientinfo.h \
 		../../Qt/5.8/gcc_64/include/QtNetwork/QHostAddress \
 		../../Qt/5.8/gcc_64/include/QtNetwork/qhostaddress.h \
@@ -879,11 +891,17 @@ moc_Connection.cpp: ../../Qt/5.8/gcc_64/include/QtCore/QObject \
 		libs/aes.h \
 		libs/sha512.h \
 		libs/gcm.h \
+		libs/entropy.h \
+		libs/sha256.h \
+		libs/threading.h \
+		libs/havege.h \
+		libs/ctr_drbg.h \
 		buffer.h \
 		../../Qt/5.8/gcc_64/include/QtCore/QByteArray \
 		../../Qt/5.8/gcc_64/include/QtCore/QDataStream \
 		../../Qt/5.8/gcc_64/include/QtCore/qdatastream.h \
 		parser.h \
+		../../Qt/5.8/gcc_64/include/QtCore/QList \
 		Server.h \
 		../../Qt/5.8/gcc_64/include/QtNetwork/QTcpServer \
 		../../Qt/5.8/gcc_64/include/QtNetwork/qtcpserver.h \
@@ -891,11 +909,6 @@ moc_Connection.cpp: ../../Qt/5.8/gcc_64/include/QtCore/QObject \
 		../../Qt/5.8/gcc_64/include/QtCore/qthread.h \
 		Connection.h \
 		rsautils.h \
-		libs/entropy.h \
-		libs/sha256.h \
-		libs/threading.h \
-		libs/havege.h \
-		libs/ctr_drbg.h \
 		libs/rsa.h \
 		libs/bignum.h \
 		libs/md.h \
@@ -986,6 +999,9 @@ moc_Server.cpp: ../../Qt/5.8/gcc_64/include/QtCore/QObject \
 		../../Qt/5.8/gcc_64/include/QtCore/qdatetime.h \
 		../../Qt/5.8/gcc_64/include/QtNetwork/qssl.h \
 		../../Qt/5.8/gcc_64/include/QtCore/QFlags \
+		../../Qt/5.8/gcc_64/include/QtCore/QFile \
+		../../Qt/5.8/gcc_64/include/QtCore/qfile.h \
+		../../Qt/5.8/gcc_64/include/QtCore/qfiledevice.h \
 		clientinfo.h \
 		../../Qt/5.8/gcc_64/include/QtNetwork/QHostAddress \
 		../../Qt/5.8/gcc_64/include/QtCore/QJsonDocument \
@@ -1005,18 +1021,19 @@ moc_Server.cpp: ../../Qt/5.8/gcc_64/include/QtCore/QObject \
 		libs/aes.h \
 		libs/sha512.h \
 		libs/gcm.h \
-		buffer.h \
-		../../Qt/5.8/gcc_64/include/QtCore/QByteArray \
-		../../Qt/5.8/gcc_64/include/QtCore/QDataStream \
-		../../Qt/5.8/gcc_64/include/QtCore/qdatastream.h \
-		parser.h \
-		Server.h \
-		rsautils.h \
 		libs/entropy.h \
 		libs/sha256.h \
 		libs/threading.h \
 		libs/havege.h \
 		libs/ctr_drbg.h \
+		buffer.h \
+		../../Qt/5.8/gcc_64/include/QtCore/QByteArray \
+		../../Qt/5.8/gcc_64/include/QtCore/QDataStream \
+		../../Qt/5.8/gcc_64/include/QtCore/qdatastream.h \
+		parser.h \
+		../../Qt/5.8/gcc_64/include/QtCore/QList \
+		Server.h \
+		rsautils.h \
 		libs/rsa.h \
 		libs/bignum.h \
 		libs/md.h \
@@ -1123,6 +1140,9 @@ main.o: main.cpp ../../Qt/5.8/gcc_64/include/QtCore/QCoreApplication \
 		../../Qt/5.8/gcc_64/include/QtCore/qdatetime.h \
 		../../Qt/5.8/gcc_64/include/QtNetwork/qssl.h \
 		../../Qt/5.8/gcc_64/include/QtCore/QFlags \
+		../../Qt/5.8/gcc_64/include/QtCore/QFile \
+		../../Qt/5.8/gcc_64/include/QtCore/qfile.h \
+		../../Qt/5.8/gcc_64/include/QtCore/qfiledevice.h \
 		clientinfo.h \
 		../../Qt/5.8/gcc_64/include/QtNetwork/QHostAddress \
 		../../Qt/5.8/gcc_64/include/QtCore/QJsonDocument \
@@ -1142,17 +1162,18 @@ main.o: main.cpp ../../Qt/5.8/gcc_64/include/QtCore/QCoreApplication \
 		libs/aes.h \
 		libs/sha512.h \
 		libs/gcm.h \
-		buffer.h \
-		../../Qt/5.8/gcc_64/include/QtCore/QByteArray \
-		../../Qt/5.8/gcc_64/include/QtCore/QDataStream \
-		../../Qt/5.8/gcc_64/include/QtCore/qdatastream.h \
-		parser.h \
-		rsautils.h \
 		libs/entropy.h \
 		libs/sha256.h \
 		libs/threading.h \
 		libs/havege.h \
 		libs/ctr_drbg.h \
+		buffer.h \
+		../../Qt/5.8/gcc_64/include/QtCore/QByteArray \
+		../../Qt/5.8/gcc_64/include/QtCore/QDataStream \
+		../../Qt/5.8/gcc_64/include/QtCore/qdatastream.h \
+		parser.h \
+		../../Qt/5.8/gcc_64/include/QtCore/QList \
+		rsautils.h \
 		libs/rsa.h \
 		libs/bignum.h \
 		libs/md.h
@@ -1241,6 +1262,9 @@ Server.o: Server.cpp Server.h \
 		../../Qt/5.8/gcc_64/include/QtCore/qdatetime.h \
 		../../Qt/5.8/gcc_64/include/QtNetwork/qssl.h \
 		../../Qt/5.8/gcc_64/include/QtCore/QFlags \
+		../../Qt/5.8/gcc_64/include/QtCore/QFile \
+		../../Qt/5.8/gcc_64/include/QtCore/qfile.h \
+		../../Qt/5.8/gcc_64/include/QtCore/qfiledevice.h \
 		clientinfo.h \
 		../../Qt/5.8/gcc_64/include/QtNetwork/QHostAddress \
 		../../Qt/5.8/gcc_64/include/QtCore/QJsonDocument \
@@ -1260,17 +1284,18 @@ Server.o: Server.cpp Server.h \
 		libs/aes.h \
 		libs/sha512.h \
 		libs/gcm.h \
-		buffer.h \
-		../../Qt/5.8/gcc_64/include/QtCore/QByteArray \
-		../../Qt/5.8/gcc_64/include/QtCore/QDataStream \
-		../../Qt/5.8/gcc_64/include/QtCore/qdatastream.h \
-		parser.h \
-		rsautils.h \
 		libs/entropy.h \
 		libs/sha256.h \
 		libs/threading.h \
 		libs/havege.h \
 		libs/ctr_drbg.h \
+		buffer.h \
+		../../Qt/5.8/gcc_64/include/QtCore/QByteArray \
+		../../Qt/5.8/gcc_64/include/QtCore/QDataStream \
+		../../Qt/5.8/gcc_64/include/QtCore/qdatastream.h \
+		parser.h \
+		../../Qt/5.8/gcc_64/include/QtCore/QList \
+		rsautils.h \
 		libs/rsa.h \
 		libs/bignum.h \
 		libs/md.h
@@ -1353,6 +1378,9 @@ Connection.o: Connection.cpp Connection.h \
 		../../Qt/5.8/gcc_64/include/QtCore/qdatetime.h \
 		../../Qt/5.8/gcc_64/include/QtNetwork/qssl.h \
 		../../Qt/5.8/gcc_64/include/QtCore/QFlags \
+		../../Qt/5.8/gcc_64/include/QtCore/QFile \
+		../../Qt/5.8/gcc_64/include/QtCore/qfile.h \
+		../../Qt/5.8/gcc_64/include/QtCore/qfiledevice.h \
 		clientinfo.h \
 		../../Qt/5.8/gcc_64/include/QtNetwork/QHostAddress \
 		../../Qt/5.8/gcc_64/include/QtNetwork/qhostaddress.h \
@@ -1373,22 +1401,23 @@ Connection.o: Connection.cpp Connection.h \
 		libs/aes.h \
 		libs/sha512.h \
 		libs/gcm.h \
+		libs/entropy.h \
+		libs/sha256.h \
+		libs/threading.h \
+		libs/havege.h \
+		libs/ctr_drbg.h \
 		buffer.h \
 		../../Qt/5.8/gcc_64/include/QtCore/QByteArray \
 		../../Qt/5.8/gcc_64/include/QtCore/QDataStream \
 		../../Qt/5.8/gcc_64/include/QtCore/qdatastream.h \
 		parser.h \
+		../../Qt/5.8/gcc_64/include/QtCore/QList \
 		Server.h \
 		../../Qt/5.8/gcc_64/include/QtNetwork/QTcpServer \
 		../../Qt/5.8/gcc_64/include/QtNetwork/qtcpserver.h \
 		../../Qt/5.8/gcc_64/include/QtCore/QThread \
 		../../Qt/5.8/gcc_64/include/QtCore/qthread.h \
 		rsautils.h \
-		libs/entropy.h \
-		libs/sha256.h \
-		libs/threading.h \
-		libs/havege.h \
-		libs/ctr_drbg.h \
 		libs/rsa.h \
 		libs/bignum.h \
 		libs/md.h
@@ -1533,6 +1562,11 @@ gcmutils.o: gcmutils.cpp gcmutils.h \
 		../../Qt/5.8/gcc_64/include/QtCore/qjsonvalue.h \
 		../../Qt/5.8/gcc_64/include/QtCore/QJsonObject \
 		../../Qt/5.8/gcc_64/include/QtCore/qjsonobject.h \
+		libs/entropy.h \
+		libs/sha256.h \
+		libs/threading.h \
+		libs/havege.h \
+		libs/ctr_drbg.h \
 		../../Qt/5.8/gcc_64/include/QtCore/QDebug \
 		../../Qt/5.8/gcc_64/include/QtCore/qdebug.h \
 		../../Qt/5.8/gcc_64/include/QtCore/qhash.h \
@@ -1672,6 +1706,20 @@ cipher.o: libs/cipher.c libs/config.h \
 		libs/platform_time.h
 	$(CC) -c $(CFLAGS) $(INCPATH) -o cipher.o libs/cipher.c
 
+padlock.o: libs/padlock.c libs/config.h \
+		libs/target_config.h \
+		libs/check_config.h \
+		libs/padlock.h \
+		libs/aes.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o padlock.o libs/padlock.c
+
+platform.o: libs/platform.c libs/config.h \
+		libs/target_config.h \
+		libs/check_config.h \
+		libs/platform.h \
+		libs/platform_time.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o platform.o libs/platform.c
+
 ccm.o: libs/ccm.c libs/config.h \
 		libs/target_config.h \
 		libs/check_config.h \
@@ -1685,6 +1733,7 @@ cmac.o: libs/cmac.c libs/config.h \
 		libs/target_config.h \
 		libs/check_config.h \
 		libs/cmac.h \
+		libs/cipher.h \
 		libs/platform.h \
 		libs/platform_time.h
 	$(CC) -c $(CFLAGS) $(INCPATH) -o cmac.o libs/cmac.c
@@ -1915,7 +1964,8 @@ rsa.o: libs/rsa.c libs/config.h \
 		libs/cipher.h \
 		libs/x509.h \
 		libs/platform.h \
-		libs/platform_time.h
+		libs/platform_time.h \
+		libs/sha1.h
 	$(CC) -c $(CFLAGS) $(INCPATH) -o rsa.o libs/rsa.c
 
 rsautils.o: rsautils.cpp rsautils.h \
@@ -2116,6 +2166,9 @@ parser.o: parser.cpp parser.h \
 		../../Qt/5.8/gcc_64/include/QtCore/qjsonvalue.h \
 		../../Qt/5.8/gcc_64/include/QtCore/QJsonObject \
 		../../Qt/5.8/gcc_64/include/QtCore/qjsonobject.h \
+		../../Qt/5.8/gcc_64/include/QtCore/QList \
+		../../Qt/5.8/gcc_64/include/QtCore/QJsonArray \
+		../../Qt/5.8/gcc_64/include/QtCore/qjsonarray.h \
 		clientinfo.h \
 		../../Qt/5.8/gcc_64/include/QtNetwork/QHostAddress \
 		../../Qt/5.8/gcc_64/include/QtNetwork/qhostaddress.h \
@@ -2137,8 +2190,6 @@ parser.o: parser.cpp parser.h \
 		../../Qt/5.8/gcc_64/include/QtCore/qsharedpointer.h \
 		../../Qt/5.8/gcc_64/include/QtCore/qsharedpointer_impl.h \
 		../../Qt/5.8/gcc_64/include/QtCore/QJsonValue \
-		../../Qt/5.8/gcc_64/include/QtCore/QJsonArray \
-		../../Qt/5.8/gcc_64/include/QtCore/qjsonarray.h \
 		../../Qt/5.8/gcc_64/include/QtCore/QDebug
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o parser.o parser.cpp
 
