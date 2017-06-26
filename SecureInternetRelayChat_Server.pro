@@ -56,7 +56,6 @@ SOURCES += main.cpp \
 HEADERS += \
     Connection.h \
     clientinfo.h \
-    catch.hpp \
     gcmutils.h \
     securityfunctions.h \
     libs/cipher_internal.h \
@@ -96,6 +95,7 @@ HEADERS += \
     libs/md.h \
     libs/oid.h \
     libs/rsa.h \
+    libs/catch.hpp \
     rsautils.h \
     buffer.h \
     parser.h \
