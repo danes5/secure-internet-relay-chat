@@ -1,24 +1,22 @@
-#include <QCoreApplication>
 #include "Server.h"
+#include <QCoreApplication>
 #include <QDebug>
 
-#include <QJsonDocument>
-#include <QJsonValue>
 #include <QJsonArray>
+#include <QJsonDocument>
 #include <QJsonObject>
+#include <QJsonValue>
 
 // Tell CATCH to define its main function here
 //#define CATCH_CONFIG_MAIN
 //#include "catch.hpp"
 
-int main(int argc, char *argv[])
-{
-    QCoreApplication a(argc, argv);
+int main(int argc, char *argv[]) {
+  QCoreApplication a(argc, argv);
 
-
-    Server server;
-    //server.startServer();
-    return a.exec();
+  Server server;
+  // server.startServer();
+  return a.exec();
 }
 
 /*TEST_CASE("test adding client"){
@@ -81,9 +79,3 @@ TEST_CASE("Get clients name JSON"){
    REQUIRE(names[3].toString() == "126");
    REQUIRE(names[4].toString() == "127");
 }*/
-
-
-
-
-
-
